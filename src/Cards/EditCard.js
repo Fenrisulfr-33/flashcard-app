@@ -1,0 +1,138 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, useHistory, Link} from 'react-router-dom';
+import { readDeck, readCard, updateCard } from '../utils/api';
+
+/**
+ * Allows the user to modify information on an exsisting deck
+ * @params
+ * 
+ * @returns
+ * path = '/decks/:deckId/edit
+ * 
+ */
+
+export const EditCard = () => {
+    const { cardId, deckId } = useParams();
+
+    const history = useHistory();
+
+    const [deck, setDeck] = useState([]);
+    const [card, setCard] = useState([]);
+    const initalFormData = {
+        front: '',
+        back: '',
+    };
+    const [formData, setFormData] = useState({ ...initalFormData });
+
+    // readDeck is used to push the deck name in the bread crumbs
+    useEffect(() => {
+        const abortController = new AbortController();
+
+        async function getDeck(){
+            const deck = await readDeck(deckId, abortController.signal);
+            setDeck(deck);
+        }
+        getDeck();
+    }, [deckId])
+    // readCard is used to grab the front and back of the card
+    useEffect(() => {
+        const abortController = new AbortController();
+
+        async function getDeck(){
+            const card = await readCard(cardId, abortController.signal);
+            setCard(card);
+            setFormData({
+                front: card.front,
+                back: card.back,
+            });
+        }
+        getDeck();
+    }, [cardId])
+
+
+
+    const handleChange = ({ target }) => {
+        setFormData({
+            ...formData,
+            [target.name]: target.value,
+        });
+    };
+    // If the user clicks cancel they are taken to the home screen
+    const handleCancel = () => {
+        history.push(`/decks/${deckId}`);
+    };
+    // If the user clicks submit, submit the form and then return to the home screen
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        card.front = formData.front;
+        card.back = formData.back;
+
+            const abortController = new AbortController();
+        
+            async function updatedCard(){
+                await updateCard(card, abortController.signal);
+                setCard(card);
+            }
+            updatedCard();
+            history.push(`/decks/${deckId}`);
+        
+    };
+
+    if (!card && !deck && formData.back === undefined) {
+        return 'Loading...';
+    } else {
+        return (
+            <>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <Link to='/'>
+                                <span className='oi oi-home mr-2'></span>
+                                Home
+                            </Link>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <Link to={`/decks/${deckId}`}>
+                                Deck {deck.name}
+                            </Link>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Card {cardId}</li>
+                    </ol>
+                </nav>
+                <h2>Edit Card</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="front">Front</label>
+                        <textarea 
+                            class="form-control" 
+                            id="front" 
+                            name='front'
+                            rows="3" 
+                            onChange={handleChange}
+                            value={formData.front}
+                        ></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="back">Back</label>
+                        <textarea 
+                            class="form-control" 
+                            id="back" 
+                            name='back'
+                            rows="3" 
+                            onChange={handleChange}
+                            value={formData.back}
+                        ></textarea>
+                    </div>
+                    <button className='btn btn-secondary' onClick={handleCancel}>
+                        Cancel
+                    </button>
+                    <button className='btn btn-primary' onClick={handleSubmit}>
+                        Submit
+                    </button>
+                </form>
+            </>
+        );
+    }
+};
+
+export default EditCard;
