@@ -1,13 +1,13 @@
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import Header from './Header';
 import Home from '../Home';
-import Study from '../Decks/Study';
+import StudyCards from '../Cards/StudyCards';
 import NotFound from "./NotFound";
 import DeckView from '../Decks/DeckView';
 import CreateDeck from '../Decks/CreateDeck';
 import EditCard from '../Cards/EditCard';
 import AddCard from '../Cards/AddCard';
-import { Route, Switch } from 'react-router-dom';
 import EditDeck from '../Decks/EditDeck';
 
 function Layout() {
@@ -26,7 +26,7 @@ function Layout() {
             <DeckView />
           </Route>
           <Route exact path='/decks/:deckId/study'>
-            <Study />
+            <StudyCards />
           </Route> 
           <Route exact path='/decks/:deckId/edit'>
             <EditDeck />

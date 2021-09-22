@@ -2,12 +2,14 @@ import React from 'react';
 import Deck from './Deck';
 
 /**
- * @params
- * 
+ * @props
+ * an array od decks
  * @returns
+ * a list of Deck componenets
  */
 
 export const DeckList = ({ decks }) => {
+    // Do not modify prop, map prop
     const list = decks.map((deck) => <Deck key={deck.id} deck={deck} />);
 
     return (

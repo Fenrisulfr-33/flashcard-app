@@ -1,8 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * @props
+ * take in the indvidual deck, do not modify
+ * @returns 
+ * deck.name with the length required to study and the current length, a add button to redirect them to add cards
+ */
 
-export const NotEnough = ({ deck }) => {
+export const NotEnoughCards = ({ deck }) => {
         return (
             <>
                 <h1>{deck.name}: Study</h1>
@@ -19,4 +25,4 @@ export const NotEnough = ({ deck }) => {
         );
 }
 
-export default NotEnough;
+export default NotEnoughCards;

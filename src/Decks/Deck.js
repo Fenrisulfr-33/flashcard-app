@@ -3,15 +3,13 @@ import {  Link, useHistory } from 'react-router-dom';
 import { deleteDeck } from '../utils/api';
 
 /**
- * Shows all of the information about a specified deck with options to edit or add cards to the deck,
- * navigate to the study screen, or delet the deck
- * @params
- * ? deck database ?
+ * @props
+ * a indvidual deck
  * @returns
- * path = '/decks/:deckId'
- * Shows info about deck with buttons
+ * Shows name and description of deck with buttons to view/study/delete
  */
 export const Deck = ({ deck }) => {
+    // useHsitory for if delete deck button is used bring back to home page
     const history = useHistory();
     
     const handleDelete = async () => {
@@ -24,34 +22,31 @@ export const Deck = ({ deck }) => {
     };
 
     return (
-        <div class="card">
-        <div class="card-body">
-            <div class='row'>
-                <h5 class="card-title">{deck.name}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{deck.cards.length} cards</h6>
+        <div className="card">
+            <div className="card-body">
+                <div className='row'>
+                    <h5 className="card-title">{deck.name}</h5>
+                    <h6 className="card-subtitle mb-2 text-muted">{deck.cards.length} cards</h6>
+                </div>
+                <p className="card-text">{deck.description}</p>
+                <div>
+                    <Link to={`/decks/${deck.id}`}>
+                        <button className='btn btn-secondary'>
+                            <span className='oi oi-eye mr-2'></span>
+                            View
+                        </button>
+                    </Link>
+                    <Link to={`/decks/${deck.id}/study`}>
+                        <button className='btn btn-primary'>
+                            <span className='oi oi-book mr-2'></span>
+                            Study
+                        </button>
+                    </Link>
+                        <button className='btn btn-danger' onClick={handleDelete}>
+                            <span className='oi oi-trash'></span>
+                        </button>
+                </div>       
             </div>
-            <p class="card-text">{deck.description}</p>
-            <div>
-                <Link to={`/decks/${deck.id}`}>
-                    <button className='btn btn-secondary'>
-                        <span className='oi oi-eye mr-2'></span>
-                        View
-                    </button>
-                </Link>
-                <Link to={`/decks/${deck.id}/study`}>
-                    <button className='btn btn-primary'>
-                        <span className='oi oi-book mr-2'></span>
-                        Study
-                    </button>
-                </Link>
-                    <button 
-                    className='btn btn-danger' 
-                    onClick={handleDelete}
-                    >
-                        <span className='oi oi-trash'></span>
-                    </button>
-            </div>       
-        </div>
         </div>
     );
 }

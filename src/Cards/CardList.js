@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import CardView from './CardView';
 
+/**
+ * @props
+ * take in the deck to get the cards  
+ * @returns 
+ * a list of cards 
+ */
+
 export const CardList = ({ deck }) => {
+    // get a cards state and map the list of cards
     const [cards, setCards] = useState(deck.cards);
 
     const list = cards.map((card) => <CardView key={card.id} card={card} />)

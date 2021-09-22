@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import CardList from '../Cards/CardList';
 import { readDeck, deleteDeck } from '../utils/api';
+import CardList from '../Cards/CardList';
+
+/**
+ * @returns
+ * a view of the deck with a upper componenet with the description and buttons for editing/viewing/studying/deleteing
+ * a view of a lower componenet with the cards and a edit and delete
+ */
 
 export const DeckView = () => {
+    // usehistory if the deck or card is delete return to home or the deck
     const history = useHistory();
-    const [deck, setDeck] = useState({});
+    // get the deckId param
     const { deckId } = useParams();
-
+    // get the deck and use the deckId param
+    const [deck, setDeck] = useState({});
+    // get the deck nd setDeck data
     useEffect(() => {
     const abortController = new AbortController();
         async function getDeck() {
@@ -16,9 +25,7 @@ export const DeckView = () => {
         }
         getDeck();
     }, [deckId])
-
-    
-
+    // handle delete and if deck is deleted return to home
     const handleDelete = async () => {
         const abortController = new AbortController();
         const result = window.confirm('Delete this deck?\n\nYou will not be able to recover it');
@@ -27,29 +34,30 @@ export const DeckView = () => {
             history.push('/');
         }
     };
-
+    // if there is no deck.id load
+    // The cardList componenet shows the cards
     if (!deck.id) {
         return "Loading..."
     } else {
         return (
             <>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
+                <ol className="breadcrumb">
+                    <li classname="breadcrumb-item">
                         <Link to='/'>
                             <span className='oi oi-home mr-2'></span>
                             Home
                         </Link>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">{deck.name}</li>
+                    <li className="breadcrumb-item active" aria-current="page">{deck.name}</li>
                 </ol>
             </nav>
-            <div class="card">
-                <div class="card-body">
-                    <div class='row'>
-                        <h5 class="card-title">{deck.name}</h5>
+            <div className="card">
+                <div className="card-body">
+                    <div className='row'>
+                        <h5 className="card-title">{deck.name}</h5>
                     </div>
-                    <p class="card-text">{deck.description}</p>
+                    <p className="card-text">{deck.description}</p>
                     <div>
                         <Link to={`/decks/${deck.id}/edit`}>
                             <button className='btn btn-secondary'>
@@ -69,9 +77,7 @@ export const DeckView = () => {
                                 Add Cards
                             </button>
                         </Link>
-                            <button 
-                            className='btn btn-danger' 
-                            onClick={handleDelete}>
+                            <button className='btn btn-danger' onClick={handleDelete}>
                                 <span className='oi oi-trash'></span>
                             </button>
                     </div>
