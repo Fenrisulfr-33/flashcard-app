@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CardView from './CardView';
 
 /**
@@ -8,11 +8,11 @@ import CardView from './CardView';
  * a list of cards 
  */
 
-export const CardList = ({ deck }) => {
+export const CardList = ({ cards, setCards}) => {
     // get a cards state and map the list of cards
-    const [cards, setCards] = useState(deck.cards);
+    
 
-    const list = cards.map((card) => <CardView key={card.id} card={card} />)
+    const list = cards.map((card) => <CardView key={card.id} card={card} setCards={setCards} />)
     
     return (
         <section className='container'>

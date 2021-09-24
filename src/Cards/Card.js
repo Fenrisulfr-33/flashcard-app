@@ -39,7 +39,7 @@ export const Card = ({ deck }) => {
     // check for last first as it takes two arguments
     if ((cardSide === cards[cardIndex].back) && (cardIndex + 1 === cards.length)){
         return (
-            <>
+            <div>
                 <div className="card-body">
                     <h5 className="card-title">Card {cardIndex + 1} of {cards.length}</h5>
                     <p classname="card-text">{cardSide}</p>
@@ -50,11 +50,11 @@ export const Card = ({ deck }) => {
                         Next
                     </button>
                 </div>
-            </>
+            </div>
         );
     } else if (cardSide === cards[cardIndex].front) {
         return (
-            <>
+            <div>
                 <div className="card-body">
                     <h5 className="card-title">Card {cardIndex + 1} of {cards.length}</h5>
                     <p className="card-text">{cardSide}</p>
@@ -62,11 +62,11 @@ export const Card = ({ deck }) => {
                         Flip
                     </button>
                 </div>
-            </>
+            </div>
         );
     } else if (cardSide === cards[cardIndex].back) {
         return (
-            <>
+            <div>
                 <div className="card-body">
                     <h5 className="card-title">Card {cardIndex + 1} of {cards.length}</h5>
                     <p className="card-text">{cardSide}</p>
@@ -77,7 +77,7 @@ export const Card = ({ deck }) => {
                         Next
                     </button>
                 </div>
-            </>
+            </div>
         );
     } else {
         return 'Not working';

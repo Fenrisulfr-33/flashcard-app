@@ -3,30 +3,29 @@ import { useParams, useHistory, Link} from 'react-router-dom';
 import { readDeck, updateDeck } from '../utils/api';
 
 /**
- * Allows the user to modify information on an exsisting deck
- * @params
- * 
  * @returns
- * path = '/decks/:deckId/edit
- * 
+ * the componenet filled with info with the ability to edit
  */
 
 export const EditDeck = () => {
+    // grabd deckId
     const { deckId } = useParams();
+    // grab history for push
     const history = useHistory();
-    const [deck, setDeck] = useState([]);
+    // grab the deck which is an object
+    const [deck, setDeck] = useState({});
+    // set initial deck
     const initalFormData = {
         name: '',
         description: '',
     };
+    // fill the form with the info
     const [formData, setFormData] = useState({ ...initalFormData });
-
     // readDeck is used to push the deck name in the bread crumbs
     useEffect(() => {
-        const abortController = new AbortController();
-
+        const ac = new AbortController();
         async function getDeck(){
-            const deck = await readDeck(deckId, abortController.signal);
+            const deck = await readDeck(deckId, ac.signal);
             setDeck(deck);
             setFormData({
                 name: deck.name,
@@ -35,7 +34,7 @@ export const EditDeck = () => {
         }
         getDeck();
     }, [deckId])
-
+    // handle target change
     const handleChange = ({ target }) => {
         setFormData({
             ...formData,
@@ -59,34 +58,34 @@ export const EditDeck = () => {
             updatedDeck();
             history.push(`/decks/${deckId}`);
     };
-
+    // no dekc no display
     if (!deck) {
         return 'Loading...';
     } else {
         return (
             <>
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item">
                             <Link to='/'>
                                 <span className='oi oi-home mr-2'></span>
                                 Home
                             </Link>
                         </li>
-                        <li class="breadcrumb-item" aria-current="page">
+                        <li className="breadcrumb-item" aria-current="page">
                             <Link to={`/decks/${deckId}`}>
                                 Deck {deck.name}
                             </Link>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Edit Deck</li>
+                        <li className="breadcrumb-item active" aria-current="page">Edit Deck</li>
                     </ol>
                 </nav>
                 <h2>Edit Deck</h2>
                 <form>
-                    <div class="form-group">
-                        <label for="name">Name</label>
+                    <div className="form-group">
+                        <label htmlFor="name">Name</label>
                         <textarea 
-                            class="form-control" 
+                            className="form-control" 
                             id='name' 
                             name='name'
                             rows="3" 
@@ -94,10 +93,10 @@ export const EditDeck = () => {
                             value={formData.name}
                         ></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
                         <textarea 
-                            class="form-control" 
+                            className="form-control" 
                             id='description' 
                             name='description'
                             rows="3" 

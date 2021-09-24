@@ -22,8 +22,7 @@ export default function Home() {
             setDecks(data);
         }
         fetchDecks();
-        // only call once, no dependencies
-    }, [])
+    }, [setDecks])
     // If decks hasnt loaded yet return loading... else return home page
     if (!decks) {
         return "Loading..."
@@ -38,8 +37,8 @@ export default function Home() {
                         </button>
                     </Link>
                 </div>
-                <div>
-                    <DeckList decks={decks}/>
+                <div >
+                    <DeckList decks={decks} setDecks={setDecks}/>
                 </div>
             </div>
         );

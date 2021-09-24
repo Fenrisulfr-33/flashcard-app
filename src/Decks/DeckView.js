@@ -16,15 +16,17 @@ export const DeckView = () => {
     const { deckId } = useParams();
     // get the deck and use the deckId param
     const [deck, setDeck] = useState({});
+    const [cards, setCards] = useState([]);
     // get the deck nd setDeck data
     useEffect(() => {
     const abortController = new AbortController();
         async function getDeck() {
             const data = await readDeck(deckId, abortController.signal);
             setDeck(data);
+            setCards(data.cards);
         }
         getDeck();
-    }, [deckId])
+    }, [deckId, setCards])
     // handle delete and if deck is deleted return to home
     const handleDelete = async () => {
         const abortController = new AbortController();
@@ -85,7 +87,7 @@ export const DeckView = () => {
             </div>
             <div>
                 <h2>Cards</h2>             
-                <CardList deck={deck}/>
+                <CardList cards={cards} setCards={setCards}/>
             </div>
             </>
         );

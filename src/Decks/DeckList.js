@@ -8,9 +8,9 @@ import Deck from './Deck';
  * a list of Deck componenets
  */
 
-export const DeckList = ({ decks }) => {
+export const DeckList = ({ decks, setDecks }) => {
     // Do not modify prop, map prop
-    const list = decks.map((deck) => <Deck key={deck.id} deck={deck} />);
+    const list = decks.map((deck) => <Deck key={deck.id} deck={deck} setDecks={setDecks} />);
 
     return (
         <section className='container'>

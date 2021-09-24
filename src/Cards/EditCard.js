@@ -5,20 +5,18 @@ import CardForm from './CardForm';
 
 /**
  * @returns
- * path = '/decks/:deckId/edit
- * 
+ * a component with an auto filled card with the ability to edit
  */
 
 export const EditCard = () => {
+    // pull deckId first they get pulled and distributed in order of params
     const { deckId, cardId } = useParams();
-    
+    // set deck as empty object
     const [deck, setDeck] = useState({});
-    
+    // set card as empty object
     const [card, setCard] = useState({});
-
-    
+    // this is inital form data set as object
     const [ formData, setFormData ] = useState({});
-
     // readDeck is used to push the deck name in the bread crumbs
     useEffect(() => {
         const ac = new AbortController();
@@ -28,17 +26,16 @@ export const EditCard = () => {
         }
         getDeck();
     }, [deckId])
-
+    // grab the card data and fill the formData
     useEffect(() => {
         const ac = new AbortController();
         async function getCard(){
             const cardData = await readCard(cardId, ac.signal);
             setFormData({ ...cardData });
-            console.log(cardData);
         }
         getCard();
     }, [deckId, cardId])
-
+    // redeclare the card with the exssiting data
     function editCurrentCard(front, back){
         const card = {
             id: formData.id,
@@ -48,7 +45,8 @@ export const EditCard = () => {
         }
         const ac = new AbortController();
         return updateCard(card, ac.signal);
-    }       
+    }    
+    // wait for card back   
     if (!deck.id && !card.back){
         return "Fetching card data";
     } else {
