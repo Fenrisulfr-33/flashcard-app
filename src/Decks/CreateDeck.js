@@ -10,11 +10,6 @@ import { createDeck } from '../utils/api';
 export const CreateDeck = () => {
     // get history first
     const history = useHistory();
-    // empty the deck form
-    const [deck, setDeck] = useState({
-        name: '',
-        description: '',
-    });
     // same as deck
     const initalFormData = {
         name: '',
@@ -36,18 +31,16 @@ export const CreateDeck = () => {
     // If the user clicks submit, submit the form and then return to the deck screen
     const handleSubmit = (event) => {
         event.preventDefault();
-        deck.name = formData.name;
-        deck.description = formData.description;
-        const abortController = new AbortController();
+          const abortController = new AbortController();
         async function addDeck(){
-            const newDeck = await createDeck(deck, abortController.signal);
+            const newDeck = await createDeck(formData, abortController.signal);
             setFormData({ ...initalFormData });
             history.push(`/decks/${newDeck.id}`);
         }
         addDeck();        
     };
     // no deck no display
-    if (!deck) {
+    if (!formData) {
         return 'Loading...';
     } else {
         return (
@@ -65,7 +58,7 @@ export const CreateDeck = () => {
                 </nav>
                 <h2>Create Deck</h2>
                 <form>
-                    <div classname="form-group">
+                    <div className="form-group">
                         <label htmlFor="name">Name</label>
                         <input
                             className="form-control" 

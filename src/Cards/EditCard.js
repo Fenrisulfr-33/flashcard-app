@@ -13,8 +13,6 @@ export const EditCard = () => {
     const { deckId, cardId } = useParams();
     // set deck as empty object
     const [deck, setDeck] = useState({});
-    // set card as empty object
-    const [card, setCard] = useState({});
     // this is inital form data set as object
     const [ formData, setFormData ] = useState({});
     // readDeck is used to push the deck name in the bread crumbs
@@ -47,7 +45,7 @@ export const EditCard = () => {
         return updateCard(card, ac.signal);
     }    
     // wait for card back   
-    if (!deck.id && !card.back){
+    if (!deck.id && !formData.back){
         return "Fetching card data";
     } else {
         return (

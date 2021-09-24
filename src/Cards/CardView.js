@@ -23,7 +23,6 @@ export const CardView = ({ card, setCards }) => {
         if (result) {
             await deleteCard(card.id, ac.signal);
             const data = await listCards(deckId, ac.signal);
-            console.log(data);
             setCards(data);
             history.push(`/decks/${deckId}`);
         }
