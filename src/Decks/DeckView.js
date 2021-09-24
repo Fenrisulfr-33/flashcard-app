@@ -43,7 +43,7 @@ export const DeckView = () => {
             <>
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li classname="breadcrumb-item">
+                    <li className="breadcrumb-item">
                         <Link to='/'>
                             <span className='oi oi-home mr-2'></span>
                             Home

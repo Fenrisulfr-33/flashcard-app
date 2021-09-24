@@ -1,85 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory, Link} from 'react-router-dom';
+import { useParams, Link} from 'react-router-dom';
 import { readDeck, readCard, updateCard } from '../utils/api';
+import CardForm from './CardForm';
 
 /**
- * Allows the user to modify information on an exsisting deck
- * @params
- * 
  * @returns
  * path = '/decks/:deckId/edit
  * 
  */
 
 export const EditCard = () => {
-    const { cardId, deckId } = useParams();
+    const { deckId, cardId } = useParams();
+    
+    const [deck, setDeck] = useState({});
+    
+    const [card, setCard] = useState({});
 
-    const history = useHistory();
-
-    const [deck, setDeck] = useState([]);
-    const [card, setCard] = useState([]);
-    const initalFormData = {
-        front: '',
-        back: '',
-    };
-    const [formData, setFormData] = useState({ ...initalFormData });
+    
+    const [ formData, setFormData ] = useState({});
 
     // readDeck is used to push the deck name in the bread crumbs
     useEffect(() => {
-        const abortController = new AbortController();
-
+        const ac = new AbortController();
         async function getDeck(){
-            const deck = await readDeck(deckId, abortController.signal);
-            setDeck(deck);
+            const deckData = await readDeck(deckId, ac.signal);
+            setDeck(deckData);
         }
         getDeck();
     }, [deckId])
-    // readCard is used to grab the front and back of the card
+
     useEffect(() => {
-        const abortController = new AbortController();
-
-        async function getDeck(){
-            const card = await readCard(cardId, abortController.signal);
-            setCard(card);
-            setFormData({
-                front: card.front,
-                back: card.back,
-            });
+        const ac = new AbortController();
+        async function getCard(){
+            const cardData = await readCard(cardId, ac.signal);
+            setFormData({ ...cardData });
+            console.log(cardData);
         }
-        getDeck();
-    }, [cardId])
+        getCard();
+    }, [deckId, cardId])
 
-
-
-    const handleChange = ({ target }) => {
-        setFormData({
-            ...formData,
-            [target.name]: target.value,
-        });
-    };
-    // If the user clicks cancel they are taken to the home screen
-    const handleCancel = () => {
-        history.push(`/decks/${deckId}`);
-    };
-    // If the user clicks submit, submit the form and then return to the home screen
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        card.front = formData.front;
-        card.back = formData.back;
-
-            const abortController = new AbortController();
-        
-            async function updatedCard(){
-                await updateCard(card, abortController.signal);
-                setCard(card);
-            }
-            updatedCard();
-            history.push(`/decks/${deckId}`);
-        
-    };
-
-    if (!card && !deck && formData.back === undefined) {
-        return 'Loading...';
+    function editCurrentCard(front, back){
+        const card = {
+            id: formData.id,
+            deckId: formData.deckId,
+            front: front,
+            back: back
+        }
+        const ac = new AbortController();
+        return updateCard(card, ac.signal);
+    }       
+    if (!deck.id && !card.back){
+        return "Fetching card data";
     } else {
         return (
             <>
@@ -99,37 +70,13 @@ export const EditCard = () => {
                         <li className="breadcrumb-item active" aria-current="page">Edit Card {cardId}</li>
                     </ol>
                 </nav>
-                <h2>Edit Card</h2>
-                <form>
-                    <div className="form-group">
-                        <label for="front">Front</label>
-                        <textarea 
-                            class="form-control" 
-                            id="front" 
-                            name='front'
-                            rows="3" 
-                            onChange={handleChange}
-                            value={formData.front}
-                        ></textarea>
-                    </div>
-                    <div className="form-group">
-                        <label for="back">Back</label>
-                        <textarea 
-                            class="form-control" 
-                            id="back" 
-                            name='back'
-                            rows="3" 
-                            onChange={handleChange}
-                            value={formData.back}
-                        ></textarea>
-                    </div>
-                    <button className='btn btn-secondary' onClick={handleCancel}>
-                        Cancel
-                    </button>
-                    <button className='btn btn-primary' onClick={handleSubmit}>
-                        Submit
-                    </button>
-                </form>
+                <CardForm 
+                    formData={formData}
+                    setFormData={setFormData}
+                    isNew={false} 
+                    onSuccess={editCurrentCard} 
+                    deck={deck}
+                />
             </>
         );
     }

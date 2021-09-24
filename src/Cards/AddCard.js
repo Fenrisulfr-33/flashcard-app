@@ -1,67 +1,40 @@
+
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { readDeck, createCard } from '../utils/api';
+import CardForm from './CardForm';
+
 /**
- * Allows the user to add a new card to an exsisting deck
- * @params
- * 
  * @returns
- * path = 'decks/:deckId/cards/new
- * 
+ * add new card to a deck and returns user to the deck page, uses cardForm
  */
 
 export const AddCard = () => {
+    // grab the deckId from the params
     const { deckId } = useParams();
-
-    const history = useHistory();
-
-    const [deck, setDeck] = useState([]);
-    const [card, setCard] = useState({
+    // set deck
+    const [deck, setDeck] = useState({});
+    // set inital form
+    const [formData, setFormData] = useState({
         front: '',
-        back: '',
+        back: ''
     });
-    const initalFormData = {
-        front: '',
-        back: '',
-    };
-    const [formData, setFormData] = useState({ ...initalFormData });
-
-    // readDeck is used to push the deck name in the bread crumbs
+    // readDeck is used to push the deck name in the bread crumbs && history push back to decks
     useEffect(() => {
         const abortController = new AbortController();
-
         async function getDeck(){
-            const deck = await readDeck(deckId, abortController.signal);
-            setDeck(deck);
+            const data = await readDeck(deckId, abortController.signal);
+            setDeck(data);
         }
         getDeck();
     }, [deckId])
-
-    const handleChange = ({ target }) => {
-        setFormData({
-            ...formData,
-            [target.name]: target.value,
-        });
-    };
-    // If the user clicks done they are taken to the deckscreen screen
-    const handleDone = () => {
-        history.push(`/decks/${deckId}`);
-    };
-    // If the user clicks submit, submit the form and then return to the home screen
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        card.front = formData.front;
-        card.back = formData.back;
-        const abortController = new AbortController();
-        async function addCard(){
-            await createCard(deckId, card, abortController.signal);
-            setCard(card);
-        }
-        addCard();
-        setFormData({ ...initalFormData });
-    };
-
-    if (!card && !deck && formData.back === undefined) {
+    // pass in a function to await response of adding a new card
+    function newCard(front, back){
+        const ac = new AbortController();
+        return createCard(deckId, {front, back}, ac.signal);
+    }
+    // no deck.id load
+    if (!deck.id) {
         return 'Loading...';
     } else {
         return (
@@ -81,40 +54,14 @@ export const AddCard = () => {
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Add Card</li>
                     </ol>
-                </nav>
-                <h2>{deck.name}: Add Card</h2>
-                <form>
-                    <div class="form-group">
-                        <label for="front">Front</label>
-                        <textarea 
-                            class="form-control" 
-                            id="front" 
-                            name='front'
-                            rows="3" 
-                            placeholder='Front side of card'
-                            onChange={handleChange}
-                            value={formData.front}
-                        ></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="back">Back</label>
-                        <textarea 
-                            class="form-control" 
-                            id="back" 
-                            name='back'
-                            rows="3" 
-                            placeholder='back side of card'
-                            onChange={handleChange}
-                            value={formData.back}
-                        ></textarea>
-                    </div>
-                    <button className='btn btn-secondary' onClick={handleDone}>
-                        Done
-                    </button>
-                    <button className='btn btn-primary' onClick={handleSubmit}>
-                        Submit
-                    </button>
-                </form>
+                </nav>        
+                <CardForm 
+                    formData={formData} 
+                    setFormData={setFormData}
+                    isNew={true} 
+                    onSuccess={newCard} 
+                    deck={deck} 
+                />
             </>
         );
     }
