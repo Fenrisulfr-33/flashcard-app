@@ -58,13 +58,6 @@
       "id": 5
     },
     {
-      "cards": [],
-      "front": "b",
-      "back": "b",
-      "deckId": 1,
-      "id": 7
-    },
-    {
       "front": "First card demo front",
       "back": "First card demo second",
       "deckId": 4,
