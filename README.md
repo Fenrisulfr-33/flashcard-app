@@ -1,13 +1,16 @@
 # Flashcard application
 
+* **What is it?** 
 A schools flashcard making application that allows students to create their own decks, edit decks, add cards, and edit cards.
+* **Why create it?**
+Students needed a flexible way to store flashcard information with the ability to create decks freely.
 
-## Languages
-1. HTML
-2. CSS
-3. JavaScript
-4. Twitter Bootstrap
-5. React framework ​
+## Languages and Uses
+* HTML
+* CSS
+* JavaScript
+* Twitter Bootstrap - Easier for creating the cards and buttons.
+* React framework - React router made it easy to create different routes.
 
 ## Preview
 Home Page with view of decks and options.
@@ -27,3 +30,10 @@ View of the study page inside a deck.
 2. git clone https://github.com/Fenrisulfr-33/flashcard-app.git
 3. npm install
 4. npm start
+
+## Future Goals
+None for the time being.
+
+## Reflection
+Learned when to make API calls and what information to gather and pass down to the child components.
+Getting all your information when the new route needs to be loaded is important so any sub components can have access specific information right away.
